@@ -1,71 +1,72 @@
 = Run Workflow
  
- Use this action to run CloudBees workflow from GitHub Actions workflow
- == Inputs
- 
- [cols="2a,1a,1a,3a",options="header"]
- .Input details
- |===
- 
- | Input name
- | Data type
- | Required
- | Description
- 
- | `cloudbees-url`
- | String
- | No
- | The CloudBees platform URL. Default value is `"https://api.cloudbees.io"`.
- 
- | `cloudbees-pat`
- | String
- | Yes
- | The CloudBees platform personal access token.
- 
- | `component-id`
- | String
- | No
- | The Component-id of the CloudBees workflow to be run.
- 
- | `branch-name`
- | String
- | No
- | The branch of the CloudBees workflow to be run.
+Use this action to run CloudBees workflow from GitHub Actions workflow
 
- | `workflow-file-name`
- | String
- | Yes
- | The name of the CloudBees workflow to be run.
+== Inputs
+ 
+[cols="2a,1a,1a,3a",options="header"]
+.Input details
+|===
+ 
+| Input name
+| Data type
+| Required
+| Description
+ 
+| `cloudbees-url`
+| String
+| No
+| The CloudBees platform URL. Default value is `"https://api.cloudbees.io"`.
+ 
+| `cloudbees-pat`
+| String
+| Yes
+| The CloudBees platform personal access token.
+ 
+| `component-id`
+| String
+| No
+| The Component-id of the CloudBees workflow to be run.
+ 
+| `branch-name`
+| String
+| No
+| The branch of the CloudBees workflow to be run.
 
- | `workflow-inputs`
- | JSON string
- | No
- | Input parameters required to run the workflow, formatted as JSON data in key/value pairs.
- 
- |===
+| `workflow-file-name`
+| String
+| Yes
+| The name of the CloudBees workflow to be run.
 
- == Usage example
+| `workflow-inputs`
+| JSON string
+| No
+| Input parameters required to run the workflow, formatted as JSON data in key/value pairs.
  
- In your YAML file, add:
+|===
+
+== Usage example
  
- [source,yaml]
- ----
-     - name: Run Workflow
-       uses: cloudbees-gha-cbp/run-workflow@v1
-       with:
-         cloudbees-pat: ${{ secrets.MY_PAT }}
-         component-id: "00000000-0000-0000-0000-000000000000"
-         branch-name: "main"
-         workflow-file-name: "workflow.yaml"
-         workflow-inputs: '{"workflowInput1": "test1"}'
+In your YAML file, add:
  
- ----
- == License
+[source,yaml]
+----
+    - name: Run Workflow
+      uses: cloudbees-gha-cbp/run-workflow@v1
+      with:
+        cloudbees-pat: ${{ secrets.MY_PAT }}
+        component-id: "0a93f2dc-ae5c-4246-ab82-3db8c8328284"
+        branch-name: "main"
+        workflow-file-name: "workflow.yaml"
+        workflow-inputs: '{"workflowInput1": "test1"}'
  
- This code is made available under the 
- link:https://opensource.org/license/mit/[MIT license].
+----
+== License
  
- == References
+This code is made available under the
+link:https://opensource.org/license/mit/[MIT license].
  
- * Learn more about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/actions[using actions in CloudBees workflows].
- * Learn about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/[the CloudBees platform].
+== References
+ 
+* Learn more about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/actions[using actions in CloudBees workflows].
+* Learn about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/[the CloudBees platform].
