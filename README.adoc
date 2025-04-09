@@ -45,21 +45,21 @@ Use this action to run CloudBees workflow from GitHub Actions workflow
  
 |===
 
-== Inputs
+== Output
 
 [cols="2a,1a,1a,3a",options="header"]
-.Input details
+.Output details
 |===
 
-| Input name
+| Output name
 | Data type
 | Required
 | Description
 
-| `cloudbees-url`
+| `cbp-run-url`
 | String
 | No
-| The CloudBees platform URL. Default value is `"https://api.cloudbees.io"`.
+| The CloudBees platform URL of the triggered CloudBees workflow run.
 
 |===
 
@@ -81,7 +81,7 @@ In your YAML file, add:
  
 ----
 
-Using output
+Using output from action
 
 The platform workflow file below prints the cbp-run-url captured as output from action:
 
