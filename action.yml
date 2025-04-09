@@ -22,6 +22,10 @@ inputs:
     description: 'Input parameters required to run the workflow, formatted as JSON data in key/value pairs.'
     required: false
 
+outputs:
+  cbp_run_url:
+    description: "The triggered cbp run url"
+
 runs:
   using: "docker"
   image: "docker://ghcr.io/karthiknaveene/gha-action/run-workflow:latest"
