@@ -47,18 +47,16 @@ Use this action to run CloudBees workflow from GitHub Actions workflow
 
 == Output
 
-[cols="2a,1a,1a,3a",options="header"]
+[cols="2a,1a,3a",options="header"]
 .Output details
 |===
 
 | Output name
 | Data type
-| Required
 | Description
 
 | `cbp-run-url`
 | String
-| No
 | The CloudBees platform URL of the triggered CloudBees workflow run.
 
 |===
