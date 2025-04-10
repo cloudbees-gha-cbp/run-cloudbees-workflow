@@ -1,4 +1,4 @@
-= Run Workflow
+= Run CloudBees Workflow
  
 Use this action to run CloudBees workflow from GitHub Actions workflow
 
