@@ -69,7 +69,7 @@ In your YAML file, add:
 [source,yaml]
 ----
     - name: Run Workflow
-      uses: cloudbees-gha-cbp/run-workflow@v1
+      uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
       with:
         cloudbees-pat: ${{ secrets.MY_PAT }}
         component-id: "0a93f2dc-ae5c-4246-ab82-3db8c8328284"
@@ -86,8 +86,8 @@ The platform workflow file below prints the cbp-run-url captured as output from 
 [source,yaml]
 ----
     - name: Run Workflow
-      uses: cloudbees-gha-cbp/run-workflow@v1
-      id: run-workflow-action
+      uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+      id: run-cloudbees-workflow-action
       with:
         cloudbees-pat: ${{ secrets.MY_PAT }}
         component-id: "0a93f2dc-ae5c-4246-ab82-3db8c8328284"
@@ -96,7 +96,7 @@ The platform workflow file below prints the cbp-run-url captured as output from 
         workflow-inputs: '{"workflowInput1": "test1"}'
 
     - name: Print runUrl output
-      run: echo "The CloudBees run URL is ${{ steps.run-workflow-action.outputs.cbp_run_url}}"
+      run: echo "The CloudBees run URL is ${{ steps.run-cloudbees-workflow-action.outputs.cbp_run_url}}"
 
 ----
 
