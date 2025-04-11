@@ -29,6 +29,7 @@ outputs:
 runs:
   using: "docker"
   image: "docker://public.ecr.aws/l7o7z1g8/actions/gha-run-cbp-workflow:main-8fdd8cbcbadd997d742746287356687549e411d1"
+  user: "1001"
   env:
     CLOUDBEES_API_URL: ${{ inputs.cloudbees-url }}
     CLOUDBEES_API_TOKEN: ${{ inputs.cloudbees-pat }}
@@ -36,13 +37,14 @@ runs:
     BRANCH_NAME: ${{ inputs.branch-name }}
     WORKFLOW_FILE_NAME: ${{ inputs.workflow-file-name }}
     WORKFLOW_INPUTS: ${{ inputs.workflow-inputs }}
+    GITHUB_OUTPUT: ${{ env.GITHUB_OUTPUT }}
 
-  entrypoint: /bin/sh
-  args:
-    - -c
-    - |
-      # Make sure the output file is writable
-      chmod o+w "$GITHUB_OUTPUT"
+  # entrypoint: /bin/sh
+  # args:
+  #   - -c
+  #   - |
+  #     # Make sure the output file is writable
+  #     chmod o+w "$GITHUB_OUTPUT"
 
-      # Then run your actual container logic (entrypoint.sh or equivalent)
-      /app/action-app
+  #     # Then run your actual container logic (entrypoint.sh or equivalent)
+  #     /app/action-app
