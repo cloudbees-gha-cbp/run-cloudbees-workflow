@@ -36,3 +36,13 @@ runs:
     BRANCH_NAME: ${{ inputs.branch-name }}
     WORKFLOW_FILE_NAME: ${{ inputs.workflow-file-name }}
     WORKFLOW_INPUTS: ${{ inputs.workflow-inputs }}
+
+  entrypoint: /bin/sh
+  args:
+    - -c
+    - |
+      # Make sure the output file is writable
+      chmod o+w "$GITHUB_OUTPUT"
+
+      # Then run your actual container logic (entrypoint.sh or equivalent)
+      /app/action-app
