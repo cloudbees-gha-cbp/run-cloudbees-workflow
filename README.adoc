@@ -1,49 +1,58 @@
-= Run Workflow
+= Run a CloudBees platform workflow
  
-Use this action to run CloudBees workflow from GitHub Actions workflow
+Use this GitHub Action (GHA) in a GHA workflow to trigger a CloudBees platform workflow.
+For more information, refer to the link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/workflows/[platform workflow documentation].
 
 == Inputs
- 
-[cols="2a,1a,1a,3a",options="header"]
+
+[cols="22%a,15%a,15%a,48%a",options="header"]
 .Input details
 |===
- 
 | Input name
 | Data type
-| Required
+| Required?
 | Description
- 
-| `cloudbees-url`
-| String
-| No
-| The CloudBees platform URL. Default value is `"https://api.cloudbees.io"`.
- 
+
 | `cloudbees-pat`
 | String
 | Yes
-| The CloudBees platform personal access token.
- 
-| `component-id`
-| String
-| No
-| The Component-id of the CloudBees workflow to be run.
- 
-| `branch-name`
-| String
-| No
-| The branch of the CloudBees workflow to be run.
+| The xref:cloudbees-platform:workflows:personal-access-token.adoc[CloudBees platform personal access token].
 
 | `workflow-file-name`
 | String
 | Yes
-| The name of the CloudBees workflow to be run.
+| The filename of the CloudBees platform workflow YAML file to be run.
+
+| `cloudbees-url`
+| String
+| No
+| The CloudBees platform URL.
+The default value is `"https://api.cloudbees.io"`.
+
+| `component-id`
+| String
+| No
+| The identifier of the CloudBees platform component where the workflow to be run resides.
+If the caller GHA workflow has been onboarded to the platform, the default is the component ID of where the caller GHA workflow is located.^<<footnote,[1]>>^
+
+| `branch-name`
+| String
+| No
+| The repository code branch of the CloudBees platform workflow to be run.
+The default is the same branch as the triggering GHA workflow.
 
 | `workflow-inputs`
-| JSON string
+| JSON
 | No
-| Input parameters required to run the workflow, formatted as JSON data in key/value pairs.
- 
+| Input parameters required to run the CloudBees platform workflow, formatted as JSON data in key/value pairs.
+
 |===
+
+[#footnote]
+^[1]^ This multi-hexadecimal UUID can be found by:
+
+. Navigating to a component on the CloudBees platform.
+. Locating the ID value in the URL after `componentId=`.
 
 == Output
 
@@ -62,50 +71,174 @@ Use this action to run CloudBees workflow from GitHub Actions workflow
 |===
 
 
-== Usage example
- 
-In your YAML file, add:
- 
-[source,yaml]
-----
-    - name: Run Workflow
-      uses: cloudbees-gha-cbp/run-workflow@v1
-      with:
-        cloudbees-pat: ${{ secrets.MY_PAT }}
-        component-id: "0a93f2dc-ae5c-4246-ab82-3db8c8328284"
-        branch-name: "main"
-        workflow-file-name: "workflow.yaml"
-        workflow-inputs: '{"workflowInput1": "test1"}'
- 
-----
+== Usage examples
 
-Using output from action
+=== Basic example
 
-The platform workflow file below prints the cbp-run-url captured as output from action:
+The following is a basic example of using the action:
 
 [source,yaml]
 ----
-    - name: Run Workflow
-      uses: cloudbees-gha-cbp/run-workflow@v1
-      id: run-workflow-action
-      with:
-        cloudbees-pat: ${{ secrets.MY_PAT }}
-        component-id: "0a93f2dc-ae5c-4246-ab82-3db8c8328284"
-        branch-name: "main"
-        workflow-file-name: "workflow.yaml"
-        workflow-inputs: '{"workflowInput1": "test1"}'
-
-    - name: Print runUrl output
-      run: echo "The CloudBees run URL is ${{ steps.run-workflow-action.outputs.cbp_run_url}}"
+steps:
+      - name: Run CloudBees workflow
+        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        with:
+          cloudbees-pat: ${{ secrets.MY_PAT }}
+          workflow-file-name: "workflow.yaml"
 
 ----
+
+=== Examples using optional inputs
+
+The following example specifies the component ID and the branch name:
+
+[source,yaml]
+----
+steps:
+      - name: Run CloudBees workflow main branch
+        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        with:
+          cloudbees-pat: ${{ secrets.MY_PAT }}
+          workflow-file-name: "workflow.yaml"
+          component-id: "1234abcd-56ef-78gh-90ij-123456klmnop"
+          branch-name: "main"
+
+----
+
+The following example specifies input parameters:
+
+[source,yaml]
+----
+steps:
+      - name: Run CloudBees workflow main branch
+        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        with:
+          cloudbees-pat: ${{ secrets.MY_PAT }}
+          workflow-file-name: "workflow.yaml"
+          workflow-inputs: '{"workflowInput1": "test1","workflowInput2": "test2"}'
+
+----
+
+=== Full workflow and run example
+
+The following GHA workflow example uses this action to run a CloudBees platform workflow that prints the `cbp-run-url` output from the action.
+For more information on the `cloudbees-gha-cbp/register-build-artifact@v1` action, refer to link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/github-actions/gha-register-build-artifact[the action documentation].
+
+.Example GHA workflow YAML file
+[.collapsible]
+--
+
+[source, yaml,role="default-expanded"]
+----
+name: Build, publish artifacts, and deploy using the CloudBees platform
+
+on:
+  push:
+    branches:
+      - test-branch
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Read and increment version
+        id: versioning
+        run: |
+          VERSION_FILE="QA_VERSION"
+
+          if [ ! -f "$VERSION_FILE" ]; then
+            echo "1.0.0" > $VERSION_FILE
+          fi
+
+          CURRENT_VERSION=$(cat $VERSION_FILE)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+          PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+
+          echo "$NEW_VERSION" > $VERSION_FILE
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build Go application
+        run: |
+          go mod tidy
+          go install .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/demo-service"
+          IMAGE_VERSION="${{ steps.versioning.outputs.version }}"
+
+          docker build -t $IMAGE_NAME:$IMAGE_VERSION --progress=plain .
+          docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$IMAGE_VERSION
+          docker push $IMAGE_NAME:latest
+
+      - name: Get image digest
+        id: image-digest
+        run: |
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/demo-service"
+          IMAGE_VERSION="${{ steps.versioning.outputs.version }}"
+
+          # Extract digest from pushed image
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE_NAME:$IMAGE_VERSION | awk -F@ '{print $2}')
+
+          echo "Image Digest: $DIGEST"
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+
+          URL="docker.io/${{ secrets.DOCKER_USERNAME }}/demo-service:${{ steps.versioning.outputs.version }}"
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Register build artifact
+        uses: cloudbees-gha-cbp/register-build-artifact@v1
+        with:
+          name: "demo-service"
+          version: "${{ steps.versioning.outputs.version }}"
+          url: "docker.io/${{ secrets.DOCKER_USERNAME }}/demo-service:${{ steps.versioning.outputs.version }}"
+          digest: "${{ steps.image-digest.outputs.digest }}"
+          type: "docker"
+          cloudbees-pat: ${{ secrets.QA_PAT }}
+
+      - name: Run platform workflow
+        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        id: run-my-workflow
+        with:
+          cloudbees-pat: ${{ secrets.QA_PAT }}
+          branch-name: "test-branch"
+          workflow-file-name: "deploy-artifact.yaml"
+          workflow-inputs: '{"image-name": "demo-service", "image-version": "${{ steps.versioning.outputs.version }}", "digest":"${{ steps.image-digest.outputs.digest }}", "url":"${{ steps.image-digest.outputs.url }}" }'
+
+      - name: Use runUrl output
+        run: echo "The CloudBees run URL is ${{ steps.run-my-workflow.outputs.cbp_run_url}}"
+----
+--
 
 == License
  
-This code is made available under the
-link:https://opensource.org/license/mit/[MIT license].
+This code is made available under the link:https://opensource.org/license/mit/[MIT license].
  
 == References
  
-* Learn more about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/actions[using actions in CloudBees workflows].
+* Learn more about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/github-actions/intro[Using GitHub Actions with the CloudBees platform].
 * Learn about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/[the CloudBees platform].
