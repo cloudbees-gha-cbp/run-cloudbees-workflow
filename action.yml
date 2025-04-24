@@ -1,5 +1,9 @@
-name: 'Run Workflow'
-description: 'Run CloudBees workflow from GitHub Actions workflow'
+name: 'Run a CloudBees platform workflow'
+description: 'Trigger a CloudBees platform workflow from a GHA workflow run.'
+
+branding:
+  icon: 'command'
+  color: 'purple'
 
 inputs:
   cloudbees-url:
