@@ -122,7 +122,7 @@ steps:
 === Full workflow and run example
 
 The following GHA workflow example uses this action to run a CloudBees platform workflow that prints the `cbp-run-url` output from the action.
-For more information on the `cloudbees-gha-cbp/register-build-artifact@v1` action, refer to link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/github-actions/gha-register-build-artifact[the action documentation].
+For more information on the `cloudbees-io-gha/register-build-artifact@v1` action, refer to link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/github-actions/gha-register-build-artifact[the action documentation].
 
 .Example GHA workflow YAML file
 [.collapsible]
