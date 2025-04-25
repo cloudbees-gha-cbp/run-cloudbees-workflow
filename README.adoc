@@ -3,11 +3,6 @@
 Use this GitHub Action (GHA) in a GHA workflow to trigger a CloudBees platform workflow.
 For more information, refer to the link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/workflows/[platform workflow documentation].
 
-== Prequisites
-
-Set up the CloudBees platform and GHA to work together, providing key features of the platform to GHA workflows.
-Refer to link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/github-actions/gha-getting-started[Getting started with GHA integration] for more information.
-
 == Inputs
 
 [cols="22%a,15%a,15%a,48%a",options="header"]
@@ -86,7 +81,7 @@ The following is a basic example of using the action:
 ----
 steps:
       - name: Run CloudBees workflow
-        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        uses: cloudbees-io-gha/run-cloudbees-workflow@v1
         with:
           cloudbees-pat: ${{ secrets.MY_PAT }}
           workflow-file-name: "workflow.yaml"
@@ -101,7 +96,7 @@ The following example specifies the component ID and the branch name:
 ----
 steps:
       - name: Run CloudBees workflow main branch
-        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        uses: cloudbees-io-gha/run-cloudbees-workflow@v1
         with:
           cloudbees-pat: ${{ secrets.MY_PAT }}
           workflow-file-name: "workflow.yaml"
@@ -116,7 +111,7 @@ The following example specifies input parameters:
 ----
 steps:
       - name: Run CloudBees workflow main branch
-        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        uses: cloudbees-io-gha/run-cloudbees-workflow@v1
         with:
           cloudbees-pat: ${{ secrets.MY_PAT }}
           workflow-file-name: "workflow.yaml"
@@ -127,7 +122,7 @@ steps:
 === Full workflow and run example
 
 The following GHA workflow example uses this action to run a CloudBees platform workflow that prints the `cbp-run-url` output from the action.
-For more information on the `cloudbees-gha-cbp/register-build-artifact@v1` action, refer to link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/github-actions/gha-register-build-artifact[the action documentation].
+For more information on the `cloudbees-io-gha/register-build-artifact@v1` action, refer to link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/github-actions/gha-register-build-artifact[the action documentation].
 
 .Example GHA workflow YAML file
 [.collapsible]
@@ -216,7 +211,7 @@ jobs:
           echo "url=$URL" >> $GITHUB_OUTPUT
 
       - name: Register build artifact
-        uses: cloudbees-gha-cbp/register-build-artifact@v1
+        uses: cloudbees-io-gha/register-build-artifact@v1
         with:
           name: "demo-service"
           version: "${{ steps.versioning.outputs.version }}"
@@ -226,7 +221,7 @@ jobs:
           cloudbees-pat: ${{ secrets.QA_PAT }}
 
       - name: Run platform workflow
-        uses: cloudbees-gha-cbp/run-cloudbees-workflow@v1
+        uses: cloudbees-io-gha/run-cloudbees-workflow@v1
         id: run-my-workflow
         with:
           cloudbees-pat: ${{ secrets.QA_PAT }}
