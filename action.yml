@@ -1,4 +1,4 @@
-name: 'Run CloudBees platform workflow'
+name: 'Trigger Platform workflow'
 description: 'Trigger a CloudBees platform workflow from a GHA workflow run.'
 
 branding:
