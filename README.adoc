@@ -212,7 +212,6 @@ jobs:
 
       - name: Register Build Artifacts in Cloudbees Platform
         uses: cloudbees-io-gha/register-build-artifact@v3
-        id: go-action
         with:
           name: "gha-artifact-test"
           version: 1.0.0
