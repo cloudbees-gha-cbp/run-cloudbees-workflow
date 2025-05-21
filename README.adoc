@@ -210,15 +210,16 @@ jobs:
           URL="docker.io/${{ secrets.DOCKER_USERNAME }}/demo-service:${{ steps.versioning.outputs.version }}"
           echo "url=$URL" >> $GITHUB_OUTPUT
 
-      - name: Register build artifact
-        uses: cloudbees-io-gha/register-build-artifact@v1
+      - name: Register Build Artifacts in Cloudbees Platform
+        uses: cloudbees-io-gha/register-build-artifact@v3
+        id: go-action
         with:
-          name: "demo-service"
-          version: "${{ steps.versioning.outputs.version }}"
-          url: "docker.io/${{ secrets.DOCKER_USERNAME }}/demo-service:${{ steps.versioning.outputs.version }}"
-          digest: "${{ steps.image-digest.outputs.digest }}"
+          name: "gha-artifact-test"
+          version: 1.0.0
+          url: "docker.io/example:latest"
+          digest: "sha256:1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqr"
           type: "docker"
-          cloudbees-pat: ${{ secrets.QA_PAT }}
+          cloudbees-url: "https://api.cloudbees.io"
 
       - name: Run platform workflow
         uses: cloudbees-io-gha/run-cloudbees-workflow@v1
