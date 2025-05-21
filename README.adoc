@@ -219,7 +219,6 @@ jobs:
           url: "docker.io/example:latest"
           digest: "sha256:1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqr"
           type: "docker"
-          cloudbees-url: "https://api.cloudbees.io"
 
       - name: Run platform workflow
         uses: cloudbees-io-gha/run-cloudbees-workflow@v1
